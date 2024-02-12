@@ -11,7 +11,17 @@ for (let index = 0; index < gridWidth; index++) {
     grid[index] = new Array(gridHeight);
 }
 grid[2][1] = 1;
+const head = new SnakePart(Math.floor(gridWidth/2),Math.floor(gridHeight/2));
+head.next = new SnakePart(Math.floor(gridWidth/2)+1,Math.floor(gridHeight/2));
 
+
+for (let current = head; head.next != null; current = current.next) {
+    drawGridSquare(current.x,current.y, color="green");
+}
+
+
+
+showError("e");
 
 
 function showError(errorText) {
@@ -32,7 +42,7 @@ function drawGridSquare(x, y, color = "black") {
         throw new Error(`Index out of range. ${y} is greater than max index ${gridHeight-1}`);
     }
     
-    ctx.fillStyle = "black";
+    ctx.fillStyle = color;
     const gridSizeX = canvasWidth / gridWidth;
     const xPos = gridSizeX * x;
 

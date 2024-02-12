@@ -5,11 +5,3 @@ class SnakePart {
         this.next = next;
     }
 }
-
-
-class Snake {
-    constructor(head)
-    {
-        this.head = head;
-    }
-}
