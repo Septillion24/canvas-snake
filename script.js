@@ -2,16 +2,20 @@ let canvas = document.getElementById("demo-canvas");
 let ctx = canvas.getContext("2d");
 let canvasWidth = canvas.width;
 let canvasHeight = canvas.height;
-const gridWidth = 10;
-const gridHeight = 10;
+const gridWidth = 20;
+const gridHeight = 20;
 let head;
 let apples = [];
-var lastDirection;
+var lastDirection = left;
+
+// setInterval(doGameLoop, 500);
 
 addEventListener("keydown", moveBasedOnKeyPress);
 
-function moveBasedOnKeyPress(keyPress)
-{
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+function moveBasedOnKeyPress(keyPress) {
     if (event.key === "ArrowLeft" || event.key == "a") {
         moveSnake(left);
     }
@@ -24,7 +28,7 @@ function moveBasedOnKeyPress(keyPress)
     if (event.key === "ArrowDown" || event.key == "s") {
         moveSnake(down);
     }
-    ctx.clearRect(0,0,canvasWidth,canvasHeight);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     displayAllApples();
     displaySnake();
 }
@@ -55,7 +59,7 @@ function drawGridSquare(x, y, color = "black") {
 function createNewSnake() {
     head = new SnakePart(Math.floor(gridWidth / 2), Math.floor(gridHeight / 2));
     head.next = new SnakePart(Math.floor(gridWidth / 2) + 1, Math.floor(gridHeight / 2));
-    // head.next.next = new SnakePart(Math.floor(gridWidth / 2) + 2, Math.floor(gridHeight / 2));
+    head.next.next = new SnakePart(Math.floor(gridWidth / 2) + 2, Math.floor(gridHeight / 2));
 }
 function displaySnake() {
     for (let current = head; current != null; current = current.next) {
@@ -68,7 +72,7 @@ function displayAllApples() {
     });
 }
 function right() {
-    if ((head.next.x === head.x + 1)) {
+    if (head.next.x === head.x + 1) {
         return;
     }
     if (head.x + 1 >= gridWidth) {
@@ -76,11 +80,11 @@ function right() {
         return;
     }
     lastDirection == right;
-    let newHeadX = head.x+1;
-    return {x:newHeadX, y:head.y}
+    let newHeadX = head.x + 1;
+    return { x: newHeadX, y: head.y };
 }
 function up() {
-    if ((head.next.y === head.y - 1)) {
+    if (head.next.y === head.y - 1) {
         return;
     }
     if (head.y - 1 < 0) {
@@ -88,11 +92,11 @@ function up() {
         return;
     }
     lastDirection == up;
-    let newHeadY = head.y-1;
-    return {x:head.x, y:newHeadY}
+    let newHeadY = head.y - 1;
+    return { x: head.x, y: newHeadY };
 }
 function left() {
-    if ((head.next.x === head.x - 1)) {
+    if (head.next.x === head.x - 1) {
         return;
     }
     if (head.x - 1 < 0) {
@@ -100,11 +104,11 @@ function left() {
         return;
     }
     lastDirection == left;
-    let newHeadX = head.x-1;
-    return {x:newHeadX, y:head.y}
+    let newHeadX = head.x - 1;
+    return { x: newHeadX, y: head.y };
 }
 function down() {
-    if ((head.next.y === head.y + 1)) {
+    if (head.next.y === head.y + 1) {
         return;
     }
     if (head.y + 1 >= gridHeight) {
@@ -112,15 +116,18 @@ function down() {
         return;
     }
     lastDirection == down;
-    let newHeadY = head.y+1;
-    return {x:head.x, y:newHeadY}
+    let newHeadY = head.y + 1;
+    return { x: head.x, y: newHeadY };
 }
 function moveSnake(func) {
     const newPosition = func();
-    head.move(newPosition.x,newPosition.y);
+    head.move(newPosition.x, newPosition.y);
 }
 
-function doGameLoop() {}
+function doGameLoop() {
+    sleep(1000);
+
+}
 
 try {
     apples.push(new Apple(2, 2));
