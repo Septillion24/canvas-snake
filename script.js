@@ -8,10 +8,11 @@ let head;
 let apples = [];
 let isPaused = true;
 var lastDirection = left;
+var isDead = false;
+var currentSections = 3;
 clearCanvas();
 setInterval(doGameLoop, 500);
-if(isPaused)
-{
+if (isPaused) {
     displayPauseIcon();
 }
 
@@ -103,6 +104,7 @@ function right() {
     }
     if (head.x + 1 >= gridWidth) {
         showError("right death");
+        isDead = true;
         return;
     }
     lastDirection == right;
@@ -115,6 +117,7 @@ function up() {
     }
     if (head.y - 1 < 0) {
         showError("up death");
+        isDead = true;
         return;
     }
     lastDirection == up;
@@ -127,8 +130,10 @@ function left() {
     }
     if (head.x - 1 < 0) {
         showError("left death");
+        isDead = true;
         return;
     }
+
     lastDirection == left;
     let newHeadX = head.x - 1;
     return { x: newHeadX, y: head.y };
@@ -139,6 +144,7 @@ function down() {
     }
     if (head.y + 1 >= gridHeight) {
         showError("down death");
+        isDead = true;
         return;
     }
     lastDirection == down;
@@ -155,18 +161,49 @@ function clearCanvas() {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
+function createNewAppleWave(numberOfApples = Math.floor(currentSections / 5 + 1)) {
+    for (let i = 0; i < numberOfApples; i++) {
+        const x = Math.floor(Math.random() * gridWidth - 1);
+        const y = Math.floor(Math.random() * gridHeight - 1);
+        apples.push(new Apple(x, y));
+    }
+}
+
+function checkIfOnApple() {
+    var eatenAppleIndex = undefined;
+    apples.forEach((apple, index) => {
+        if (apple.x === head.x && apple.y === head.y) {
+            eatenAppleIndex = index;
+            return;
+        }
+    });
+
+    return eatenAppleIndex;
+}
+
 function doGameLoop() {
     if (isPaused) {
         return;
     }
+    if (isDead) {
+        return;
+    }
     // move
-    moveSnake(lastDirection);
+    const status = moveSnake(lastDirection);
     // check if on apple
+    const index = checkIfOnApple();
+    if (index !== undefined) {
+        head.addPart();
+        currentSections++;
+        apples.pop(index);
+        createNewAppleWave();
+    }
+    //display
     doDisplaySequence();
 }
 
 try {
-    apples.push(new Apple(2, 2));
+    apples.push(new Apple(8, 10));
     displayAllApples();
     createNewSnake();
     displaySnake();
