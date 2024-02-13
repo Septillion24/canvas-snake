@@ -161,8 +161,8 @@ function clearCanvas() {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
-function createNewAppleWave(numberOfApples = Math.floor(currentSections / 2 + 1)) {
-    for (let i = 0; i < numberOfApples; i++) {
+function createNewAppleWave(numberOfApples = Math.floor(currentSections / 12 + 1)) {
+    for (let i = 0; i < numberOfApples-apples.length+1; i++) {
         const x = Math.floor(Math.random() * gridWidth - 1);
         const y = Math.floor(Math.random() * gridHeight - 1);
         //TODO:
@@ -206,7 +206,7 @@ function doGameLoop() {
 }
 
 try {
-    apples.push(new Apple(8, 10));
+    apples.push(new Apple(5, 10));
     displayAllApples();
     createNewSnake();
     displaySnake();
