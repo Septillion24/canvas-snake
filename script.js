@@ -6,9 +6,14 @@ const gridWidth = 20;
 const gridHeight = 20;
 let head;
 let apples = [];
+let isPaused = true;
 var lastDirection = left;
-
+clearCanvas();
 setInterval(doGameLoop, 500);
+if(isPaused)
+{
+    displayPauseIcon();
+}
 
 addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft" || event.key == "a") {
@@ -23,14 +28,27 @@ addEventListener("keydown", (event) => {
     if (event.key === "ArrowDown" || event.key == "s") {
         lastDirection = down;
     }
+    if (event.key === " ") {
+        isPaused = !isPaused;
+        if (isPaused) {
+            displayPauseIcon();
+        } else {
+            doDisplaySequence();
+        }
+    }
 });
 
+function doDisplaySequence() {
+    // display apples
+    clearCanvas();
+    displayAllApples();
+    // display snake
+    displaySnake();
+}
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
-function moveBasedOnKeyPress(keyPress) {
-    
-}
+function moveBasedOnKeyPress(keyPress) {}
 function showError(errorText) {
     const errorBoxDiv = document.getElementById("error-box");
     const errorTextElement = document.createElement("p");
@@ -69,6 +87,15 @@ function displayAllApples() {
     apples.forEach((apple) => {
         drawGridSquare(apple.x, apple.y, "#b30909");
     });
+}
+function displayPauseIcon() {
+    drawGridSquare(0, 0, "rgba(0, 0, 0, 0.5)");
+    drawGridSquare(0, 1, "rgba(0, 0, 0, 0.5)");
+    drawGridSquare(0, 2, "rgba(0, 0, 0, 0.5)");
+
+    drawGridSquare(2, 0, "rgba(0, 0, 0, 0.5)");
+    drawGridSquare(2, 1, "rgba(0, 0, 0, 0.5)");
+    drawGridSquare(2, 2, "rgba(0, 0, 0, 0.5)");
 }
 function right() {
     if (head.next.x === head.x + 1) {
@@ -122,21 +149,23 @@ function moveSnake(func) {
     const newPosition = func();
     head.move(newPosition.x, newPosition.y);
 }
+function clearCanvas() {
+    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = "rgba(255, 255, 255, 1)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+}
 
 function doGameLoop() {
+    if (isPaused) {
+        return;
+    }
     // move
     moveSnake(lastDirection);
     // check if on apple
-
-    // display apples
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    displayAllApples();
-    // display snake
-    displaySnake();
+    doDisplaySequence();
 }
 
 try {
-    
     apples.push(new Apple(2, 2));
     displayAllApples();
     createNewSnake();
