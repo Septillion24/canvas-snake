@@ -8,29 +8,28 @@ let head;
 let apples = [];
 var lastDirection = left;
 
-// setInterval(doGameLoop, 500);
+setInterval(doGameLoop, 500);
 
-addEventListener("keydown", moveBasedOnKeyPress);
+addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" || event.key == "a") {
+        lastDirection = left;
+    }
+    if (event.key === "ArrowRight" || event.key == "d") {
+        lastDirection = right;
+    }
+    if (event.key === "ArrowUp" || event.key == "w") {
+        lastDirection = up;
+    }
+    if (event.key === "ArrowDown" || event.key == "s") {
+        lastDirection = down;
+    }
+});
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 function moveBasedOnKeyPress(keyPress) {
-    if (event.key === "ArrowLeft" || event.key == "a") {
-        moveSnake(left);
-    }
-    if (event.key === "ArrowRight" || event.key == "d") {
-        moveSnake(right);
-    }
-    if (event.key === "ArrowUp" || event.key == "w") {
-        moveSnake(up);
-    }
-    if (event.key === "ArrowDown" || event.key == "s") {
-        moveSnake(down);
-    }
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    displayAllApples();
-    displaySnake();
+    
 }
 function showError(errorText) {
     const errorBoxDiv = document.getElementById("error-box");
@@ -125,11 +124,19 @@ function moveSnake(func) {
 }
 
 function doGameLoop() {
-    sleep(1000);
+    // move
+    moveSnake(lastDirection);
+    // check if on apple
 
+    // display apples
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    displayAllApples();
+    // display snake
+    displaySnake();
 }
 
 try {
+    
     apples.push(new Apple(2, 2));
     displayAllApples();
     createNewSnake();
