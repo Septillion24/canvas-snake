@@ -161,10 +161,13 @@ function clearCanvas() {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
-function createNewAppleWave(numberOfApples = Math.floor(currentSections / 5 + 1)) {
+function createNewAppleWave(numberOfApples = Math.floor(currentSections / 2 + 1)) {
     for (let i = 0; i < numberOfApples; i++) {
         const x = Math.floor(Math.random() * gridWidth - 1);
         const y = Math.floor(Math.random() * gridHeight - 1);
+        //TODO:
+        // make sure new apple location is not under player
+        // make sure new apple location is not under another apple
         apples.push(new Apple(x, y));
     }
 }
@@ -191,11 +194,11 @@ function doGameLoop() {
     // move
     const status = moveSnake(lastDirection);
     // check if on apple
-    const index = checkIfOnApple();
+    let index = checkIfOnApple();
     if (index !== undefined) {
         head.addPart();
         currentSections++;
-        apples.pop(index);
+        apples.splice(index, 1);
         createNewAppleWave();
     }
     //display
