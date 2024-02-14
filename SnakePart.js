@@ -6,7 +6,7 @@ class SnakePart {
     }
     move(x, y) {
         if (this.next) {
-            if (!(this.next.x === this.x && this.next.y === this.y)){
+            if (!(this.next.x === this.x && this.next.y === this.y)) {
                 this.next.move(this.x, this.y);
             }
         }
@@ -19,5 +19,12 @@ class SnakePart {
         } else {
             this.next.addPart();
         }
+    }
+    toList() {
+        let snakeList = [];
+        for (let current = head; current != null; current = current.next) {
+            snakeList.push(current);
+        }
+        return snakeList;
     }
 }
