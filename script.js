@@ -38,7 +38,6 @@ addEventListener("keydown", (event) => {
         }
     }
 });
-
 function doDisplaySequence() {
     // display apples
     clearCanvas();
@@ -170,7 +169,6 @@ function clearCanvas() {
     ctx.fillStyle = "rgba(255, 255, 255, 1)";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
-
 function createNewAppleWave(numberOfApples = Math.floor(currentSections / 12 + 1)) {
     for (let i = 0; i < numberOfApples - apples.length + 1; i++) {
         const x = Math.floor(Math.random() * gridWidth - 1);
@@ -181,7 +179,6 @@ function createNewAppleWave(numberOfApples = Math.floor(currentSections / 12 + 1
         apples.push(new Apple(x, y));
     }
 }
-
 function checkIfOnApple() {
     var eatenAppleIndex = undefined;
     apples.forEach((apple, index) => {
@@ -193,7 +190,6 @@ function checkIfOnApple() {
 
     return eatenAppleIndex;
 }
-
 function doGameLoop() {
     if (isPaused) {
         return;
