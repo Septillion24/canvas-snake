@@ -11,7 +11,7 @@ var lastDirection = left;
 var isDead = false;
 var currentSections = 3;
 clearCanvas();
-setInterval(doGameLoop, 500);
+setInterval(doGameLoop, 300);
 if (isPaused) {
     displayPauseIcon();
 }
@@ -49,7 +49,6 @@ function doDisplaySequence() {
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
-function moveBasedOnKeyPress(keyPress) {}
 function showError(errorText) {
     const errorBoxDiv = document.getElementById("error-box");
     const errorTextElement = document.createElement("p");
@@ -80,8 +79,10 @@ function createNewSnake() {
     head.next.next = new SnakePart(Math.floor(gridWidth / 2) + 2, Math.floor(gridHeight / 2));
 }
 function displaySnake() {
+    let currentSnakePart = 0;
     for (let current = head; current != null; current = current.next) {
-        drawGridSquare(current.x, current.y, (color = "green"));
+        drawGridSquare(current.x, current.y, (color = `green`));
+        currentSnakePart++;
     }
 }
 function displayAllApples() {
@@ -153,7 +154,16 @@ function down() {
 }
 function moveSnake(func) {
     const newPosition = func();
-    head.move(newPosition.x, newPosition.y);
+    head.toList().forEach(part => {
+        if(part.x === newPosition.x && part.y === newPosition.y)
+        {
+            isDead = true;
+        }
+    });
+    if(!isDead)
+    {
+        head.move(newPosition.x, newPosition.y);
+    }
 }
 function clearCanvas() {
     // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -162,7 +172,7 @@ function clearCanvas() {
 }
 
 function createNewAppleWave(numberOfApples = Math.floor(currentSections / 12 + 1)) {
-    for (let i = 0; i < numberOfApples-apples.length+1; i++) {
+    for (let i = 0; i < numberOfApples - apples.length + 1; i++) {
         const x = Math.floor(Math.random() * gridWidth - 1);
         const y = Math.floor(Math.random() * gridHeight - 1);
         //TODO:
