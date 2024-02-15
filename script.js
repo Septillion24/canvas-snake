@@ -224,7 +224,6 @@ try {
     displayAllApples();
     createNewSnake();
     displaySnake();
-    killPlayer();
 } catch (e) {
     showError(e);
 }
