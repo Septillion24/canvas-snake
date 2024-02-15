@@ -11,7 +11,7 @@ var lastDirection = left;
 var isDead = false;
 var currentSections = 3;
 clearCanvas();
-setInterval(doGameLoop, 300);
+var gameLoopIntervalID = setInterval(doGameLoop, 300);
 if (isPaused) {
     displayPauseIcon();
 }
@@ -31,9 +31,9 @@ addEventListener("keydown", (event) => {
     }
     if (event.key === " ") {
         isPaused = !isPaused;
-        if (isPaused) {
+        if (isPaused && !isDead) {
             displayPauseIcon();
-        } else {
+        } else if (!isDead) {
             doDisplaySequence();
         }
     }
@@ -103,8 +103,7 @@ function right() {
         return;
     }
     if (head.x + 1 >= gridWidth) {
-        showError("right death");
-        isDead = true;
+        killPlayer();
         return;
     }
     lastDirection == right;
@@ -116,8 +115,7 @@ function up() {
         return;
     }
     if (head.y - 1 < 0) {
-        showError("up death");
-        isDead = true;
+        killPlayer();
         return;
     }
     lastDirection == up;
@@ -129,8 +127,7 @@ function left() {
         return;
     }
     if (head.x - 1 < 0) {
-        showError("left death");
-        isDead = true;
+        killPlayer();
         return;
     }
 
@@ -143,8 +140,7 @@ function down() {
         return;
     }
     if (head.y + 1 >= gridHeight) {
-        showError("down death");
-        isDead = true;
+        killPlayer();
         return;
     }
     lastDirection == down;
@@ -153,14 +149,12 @@ function down() {
 }
 function moveSnake(func) {
     const newPosition = func();
-    head.toList().forEach(part => {
-        if(part.x === newPosition.x && part.y === newPosition.y)
-        {
-            isDead = true;
+    head.toList().forEach((part) => {
+        if (part.x === newPosition.x && part.y === newPosition.y) {
+            killPlayer();
         }
     });
-    if(!isDead)
-    {
+    if (!isDead) {
         head.move(newPosition.x, newPosition.y);
     }
 }
@@ -194,11 +188,12 @@ function doGameLoop() {
     if (isPaused) {
         return;
     }
+
+    // move
+    const status = moveSnake(lastDirection);
     if (isDead) {
         return;
     }
-    // move
-    const status = moveSnake(lastDirection);
     // check if on apple
     let index = checkIfOnApple();
     if (index !== undefined) {
@@ -207,16 +202,29 @@ function doGameLoop() {
         apples.splice(index, 1);
         createNewAppleWave();
     }
+
     //display
     doDisplaySequence();
 }
+function killPlayer() {
+    isDead = true;
+    showError("You Died!");
+    clearInterval(gameLoopIntervalID);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    const centerX = Math.floor((gridWidth-1)/2);
+    const centerY = Math.floor((gridHeight-1)/2);
+}
+
+
+
 
 try {
     apples.push(new Apple(5, 10));
     displayAllApples();
     createNewSnake();
     displaySnake();
-    // drawGridSquare(1, 1);
+    killPlayer();
 } catch (e) {
     showError(e);
 }
