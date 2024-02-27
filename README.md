@@ -9,4 +9,7 @@ This project was entirely made using the HTML canvas element in combination with
 - `WASD` control snake movement
 - `Space`pauses
 
+## TODO:
 
+- Fix some minor bugs
+- Use Github Pages for hosting
