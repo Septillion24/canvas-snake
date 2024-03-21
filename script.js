@@ -11,7 +11,7 @@ var lastDirection = left;
 var isDead = false;
 var currentSections = 3;
 clearCanvas();
-var gameLoopIntervalID = setInterval(doGameLoop, 300);
+var gameLoopIntervalID = setInterval(doGameLoop, 100);
 if (isPaused) {
     displayPauseIcon();
 }
